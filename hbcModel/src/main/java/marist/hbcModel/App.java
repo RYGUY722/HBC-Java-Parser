@@ -215,32 +215,39 @@ public class App {
 		return -1;
 	}
 	
-	
+	// This method is responsible for creating and populating the GUI window.
 	public static void drawGUI() {
+		// Set up the window itself
 		JFrame frame = new JFrame("HBC Java Parser");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600,600);
+        
+        // This sets up entrypanel, the main area for all content, and makes button1, which is the "Go" button.
         JPanel entrypanel = new JPanel();
         JLabel jslabel = new JLabel("Enter a Name:");
         JTextField jsname = new JTextField();
         JLabel fplabel = new JLabel("Enter path to the src directory:");
         JTextField fpath = new JTextField();
         JButton button1 = new JButton("Parse");
+        
+        // Everything needs to be added to entrypanel in the order we want it to appear.
         entrypanel.setLayout(new BoxLayout(entrypanel, BoxLayout.Y_AXIS));
         entrypanel.add(jslabel);
         entrypanel.add(jsname);
         entrypanel.add(fplabel);
         entrypanel.add(fpath);
         
+        // To render the checklist of interaction strings, we need to create an array of CheckListItems 
         CheckListItem[] chk = new CheckListItem[userInteract.size()];
         for (int i = 0; i<userInteract.size(); i++) { 
 		    chk[i] = new CheckListItem(("\"" + userInteract.get(i).getTerm()  + "\", weight " + userInteract.get(i).getWeight()));
 		}
         
+        // It's then converted to a JList...
         JList list = new JList(chk);
         list.setCellRenderer(new CheckListRenderer());
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.addMouseListener(new MouseAdapter() {
+        list.addMouseListener(new MouseAdapter() { // ...Given the proper On-Click Event code to select/deselect the item...
           @Override
           public void mouseClicked(MouseEvent event) {
             JList list = (JList) event.getSource();
@@ -252,30 +259,40 @@ public class App {
             list.repaint(list.getCellBounds(index, index));// Repaint cell
           }
         });
-        entrypanel.add(list);    
+        entrypanel.add(list); // ...And added to entrypanel.
 
+        // Lastly, we need to add fields for the user to add a new interaction search string
         JLabel intlabel = new JLabel("Enter a new string to search for as an interaction:");
-        JTextField newint = new JTextField();
-        JTextField newweight = new JTextField();
-        JButton addnewint = new JButton("Add");
+        JTextField newint = new JTextField();     
+        JSpinner newweight = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1)); // A Spinner is a number-only entry field. This one only accepts ints between 1 and 100.
+        JButton addnewinter = new JButton("Add");
+        
+        // And add what we just created to the entrypanel.
         entrypanel.add(intlabel);
         entrypanel.add(newint);
-        entrypanel.add(addnewint);
+        entrypanel.add(newweight);
+        entrypanel.add(addnewinter);
             
-            
+     // This is the "Parse" button's on-click behavior
         button1.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent event) {
-        		if(jsname.getText().equals("")) {
+        		if(jsname.getText().equals("")) { // We need to have a name for the file.
         			JOptionPane.showMessageDialog(null, "Please enter a name for the final file");
         		}
-        		else if(fpath.getText().equals("")) {
+        		else if(fpath.getText().equals("")) { // And we need to have a filepath for it.
         			JOptionPane.showMessageDialog(null, "Please enter a filepath");
         		}
         		else {
-        			//TODO: Set the array of searched strings to only the selected strings
         			try {
-						analyzeFile(jsname.getText(), fpath.getText());
+        				// Set the array of interaction strings we're going to search for equal to what the user selected.
+        				for(int i = chk.length; i >= 0; i--) {
+        					if(!chk[i].isSelected()) {
+        						userInteract.remove(i);
+        					}
+        				}
+        				
+						analyzeFile(jsname.getText(), fpath.getText()); // Then, analyze the file.
 					} catch (IOException e) {
 						e.printStackTrace();
 						System.exit(0);
@@ -284,85 +301,28 @@ public class App {
         	}
         });
         
-        addnewint.addMouseListener(new MouseAdapter() {
+        // This is the "Add" button's on-click behavior
+        addnewinter.addMouseListener(new MouseAdapter() {
         	@Override
         	public void mouseClicked(MouseEvent event) {
-        		if(newint.getText().equals("")) {
+        		if(newint.getText().equals("")) { // The weight input always will have a value, but we need to make sure the text field does too.
         			JOptionPane.showMessageDialog(null, "Please enter a text string to search for");
         		}
         		else {
-        			userInteract.add(new InteractionObject(newint.getText().toLowerCase()));
+        			// We add a new InteractionObject with the given parameters into our ArrayList.
+        			userInteract.add(new InteractionObject(newint.getText().toLowerCase(), (int) newweight.getValue()));
+        			// Then, we reload the GUI by closing and reopening the window.
         			frame.dispose();
         			drawGUI();
         		}
         	}
         });
         
+        // Lastly, we add what we have created into the window itself, making it appear for the user!
         frame.getContentPane().add(BorderLayout.CENTER, entrypanel);
-        // TODO: Add a weight selection
         frame.getContentPane().add(BorderLayout.SOUTH, button1);
         frame.setVisible(true); // TODO: Redo the disgusting GUI, make everything sized properly.
 		
 	}
-	
-
-	
 }
 
-class CheckListItem {
-
-	  private String label;
-	  private boolean isSelected = true;
-
-	  public CheckListItem(String label) {
-	    this.label = label;
-	  }
-
-	  public boolean isSelected() {
-	    return isSelected;
-	  }
-
-	  public void setSelected(boolean isSelected) {
-	    this.isSelected = isSelected;
-	  }
-
-	  @Override
-	  public String toString() {
-	    return label;
-	  }
-	}
-
-class CheckListRenderer extends JCheckBox implements ListCellRenderer {
-	  public Component getListCellRendererComponent(JList list, Object value,
-	      int index, boolean isSelected, boolean hasFocus) {
-	    setEnabled(list.isEnabled());
-	    setSelected(((CheckListItem) value).isSelected());
-	    setFont(list.getFont());
-	    setBackground(list.getBackground());
-	    setForeground(list.getForeground());
-	    setText(value.toString());
-	    return this;
-	  }
-}
-
-class InteractionObject {
-	private String search;
-	private int weight = 1;
-	
-	public InteractionObject(String search) {
-		this.search = search;
-	}
-	
-	public InteractionObject(String search, int weight) {
-		this.search = search;
-		this.weight = weight;
-	}
-	
-	public String getTerm() {
-		return this.search;
-	}
-	
-	public int getWeight() {
-		return this.weight;
-	}
-}
