@@ -158,16 +158,6 @@ public class App {
 					interact.add(x);
 				}
 			}
-			
-//			if(fileText[x].toLowerCase().contains("system.out")) { //If it prints to the console, add score
-//				interscore++;
-//				interact.add(x);
-//			}
-//			//If it takes information from the console, add score
-//			if((fileText[x].toLowerCase().contains("system.in")&&!(fileText[x].toLowerCase().contains("scanner(system.in)"))||fileText[x].toLowerCase().contains(".next"))) {
-//				interscore+=10;
-//				interact.add(x);
-//			}
 		}
 		
 		//---OUTPUT---
@@ -220,22 +210,30 @@ public class App {
 		// Set up the window itself
 		JFrame frame = new JFrame("HBC Java Parser");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600,600);
+        frame.setSize(600,300);
         
         // This sets up entrypanel, the main area for all content, and makes button1, which is the "Go" button.
         JPanel entrypanel = new JPanel();
+        JPanel nameHolder = new JPanel(new FlowLayout()); // Holds the name entry box
+        JPanel pathHolder= new JPanel(new FlowLayout()); // Holds the name entry box
+        JPanel listHolder = new JPanel(new FlowLayout()); // Holds the interaction selection list 
+        JPanel newHolder = new JPanel(new FlowLayout()); // Holds the new interaction string entry boxes
         JLabel jslabel = new JLabel("Enter a Name:");
-        JTextField jsname = new JTextField();
+        JTextField jsname = new JTextField(20);
         JLabel fplabel = new JLabel("Enter path to the src directory:");
-        JTextField fpath = new JTextField();
+        JTextField fpath = new JTextField(20);
+        JButton fselect = new JButton("Select");
         JButton button1 = new JButton("Parse");
         
         // Everything needs to be added to entrypanel in the order we want it to appear.
         entrypanel.setLayout(new BoxLayout(entrypanel, BoxLayout.Y_AXIS));
-        entrypanel.add(jslabel);
-        entrypanel.add(jsname);
-        entrypanel.add(fplabel);
-        entrypanel.add(fpath);
+        nameHolder.add(jslabel);
+        nameHolder.add(jsname);
+        pathHolder.add(fplabel);
+        pathHolder.add(fpath);
+        //pathHolder.add(fselect); TODO: Make file selector?
+        entrypanel.add(nameHolder);
+        entrypanel.add(pathHolder);
         
         // To render the checklist of interaction strings, we need to create an array of CheckListItems 
         CheckListItem[] chk = new CheckListItem[userInteract.size()];
@@ -259,19 +257,25 @@ public class App {
             list.repaint(list.getCellBounds(index, index));// Repaint cell
           }
         });
-        entrypanel.add(list); // ...And added to entrypanel.
+        JScrollPane listScroller = new JScrollPane(list); // Makes the interaction selection list scroll
+        listScroller.setPreferredSize(new Dimension(250, 100));
+        listHolder.add(new JLabel("Select strings to search for:"));
+        listHolder.add(listScroller); // ...And added to its holder.
+        entrypanel.add(listHolder);
 
         // Lastly, we need to add fields for the user to add a new interaction search string
-        JLabel intlabel = new JLabel("Enter a new string to search for as an interaction:");
-        JTextField newint = new JTextField();     
+        JLabel intlabel = new JLabel("Enter a new interaction String:");
+        JTextField newint = new JTextField(20);     
         JSpinner newweight = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1)); // A Spinner is a number-only entry field. This one only accepts ints between 1 and 100.
         JButton addnewinter = new JButton("Add");
         
         // And add what we just created to the entrypanel.
         entrypanel.add(intlabel);
-        entrypanel.add(newint);
-        entrypanel.add(newweight);
-        entrypanel.add(addnewinter);
+        newHolder.add(newint);
+        newHolder.add(newweight);
+        newHolder.add(addnewinter);
+        entrypanel.add(newHolder);
+        
             
      // This is the "Parse" button's on-click behavior
         button1.addMouseListener(new MouseAdapter() {
@@ -321,7 +325,7 @@ public class App {
         // Lastly, we add what we have created into the window itself, making it appear for the user!
         frame.getContentPane().add(BorderLayout.CENTER, entrypanel);
         frame.getContentPane().add(BorderLayout.SOUTH, button1);
-        frame.setVisible(true); // TODO: Redo the disgusting GUI, make everything sized properly.
+        frame.setVisible(true);
 		
 	}
 }
