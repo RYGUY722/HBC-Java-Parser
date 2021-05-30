@@ -13,12 +13,10 @@ import com.github.javaparser.ast.CompilationUnit;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -158,16 +156,6 @@ public class App {
 					interact.add(x);
 				}
 			}
-			
-//			if(fileText[x].toLowerCase().contains("system.out")) { //If it prints to the console, add score
-//				interscore++;
-//				interact.add(x);
-//			}
-//			//If it takes information from the console, add score
-//			if((fileText[x].toLowerCase().contains("system.in")&&!(fileText[x].toLowerCase().contains("scanner(system.in)"))||fileText[x].toLowerCase().contains(".next"))) {
-//				interscore+=10;
-//				interact.add(x);
-//			}
 		}
 		
 		//---OUTPUT---
@@ -321,7 +309,7 @@ public class App {
         // Lastly, we add what we have created into the window itself, making it appear for the user!
         frame.getContentPane().add(BorderLayout.CENTER, entrypanel);
         frame.getContentPane().add(BorderLayout.SOUTH, button1);
-        frame.setVisible(true); // TODO: Redo the disgusting GUI, make everything sized properly.
+        frame.setVisible(true);
 		
 	}
 }
