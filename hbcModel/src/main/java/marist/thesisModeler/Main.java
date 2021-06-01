@@ -1,20 +1,13 @@
 package marist.thesisModeler;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.Random;
 import java.util.Scanner;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.jzy3d.chart.Chart;
 import org.jzy3d.chart.factories.AWTChartFactory;
 import org.jzy3d.maths.Coord3d;
-import org.jzy3d.plot3d.primitives.Scatter;
 import org.jzy3d.plot3d.primitives.selectable.SelectableScatter;
 import org.jzy3d.plot3d.rendering.canvas.Quality;
 import org.jzy3d.colors.Color;
@@ -68,12 +61,15 @@ public class Main extends AWTAbstractAnalysis{
 		fname = userin.nextLine();
 		fname = fname + ".json";
 		userin.close();
+		if(DEBUG) {
+			System.out.println("Searching for file " + fname + ".");
+		}
 		
 		InputStream is = Main.class.getResourceAsStream(fname);
         if (is == null) {
             throw new NullPointerException("Cannot find resource file " + fname);
         }
-        else if(DEBUG) {
+        else {
         	System.out.println("File " + fname + " found.");
         }
 
