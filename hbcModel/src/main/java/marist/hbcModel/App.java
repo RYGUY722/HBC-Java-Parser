@@ -13,6 +13,7 @@ import com.github.javaparser.ast.CompilationUnit;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 import javax.swing.*;
@@ -22,7 +23,7 @@ import java.awt.event.MouseEvent;
 
 public class App {
 	
-	final static public boolean DEBUG = false; // This affects the verbosity when using the console.
+	final static public boolean DEBUG = true; // This affects the verbosity when using the console.
 	public static ArrayList<InteractionObject> userInteract = new ArrayList<InteractionObject>(); // This keeps track of the phrases the program will search for, as well as their weight.
 	
 	public static void main(String[] args) throws IOException {
@@ -48,13 +49,12 @@ public class App {
 	 // The primary method, taking in the name and filepath to find all .java files in the directory, handing each one off to be parsed, and saving the final .json
 	public static void analyzeFile(String jsonname, String filepath) throws IOException {
 		// Get all files in directory.
-		File[] allfile = null; 
-		allfile = new File(filepath).listFiles();
+		ArrayList<File> allfile = getFiles(filepath);
 		
 		// Get number of .java files in the directory.
 		int filecount = 0; 
-		for(int x=0;x<allfile.length;x++) {
-			if(allfile[x].getName().contains(".java")) {
+		for(int x=0;x<allfile.size();x++) {
+			if(allfile.get(x).getName().contains(".java")) {
 				filecount++;
 			}
 		}
@@ -65,10 +65,10 @@ public class App {
 		int counter=0;
 		
 		// Loop through the array of all files, recording each one that contains the extension ".java".
-		for(int x=0;x<allfile.length;x++) {
-			if(allfile[x].getName().contains(".java")) {
-				file[counter]=allfile[x];
-				fnames[counter]=allfile[x].getName().substring(0, allfile[x].getName().indexOf(".java"));
+		for(int x=0;x<allfile.size();x++) {
+			if(allfile.get(x).getName().contains(".java")) {
+				file[counter]=allfile.get(x);
+				fnames[counter]=allfile.get(x).getName().substring(0, allfile.get(x).getName().indexOf(".java"));
 				if(DEBUG) { System.out.println("Filename added:"+fnames[counter]); }
 				counter++;
 			}
@@ -98,6 +98,8 @@ public class App {
 		jsout.close();
 		System.out.println("Analysis file created:");
 		System.out.println("git\\HBCModeling\\hbcModel\\"+jsonname+".json");
+		
+		System.exit(0);
 	}
 	
 	// This method takes in information from the main analyzeFile method to iterate through a file, produce a score, save interactions, and save all the data to the JSON array.
@@ -288,7 +290,7 @@ public class App {
         		else {
         			try {
         				// Set the array of interaction strings we're going to search for equal to what the user selected.
-        				for(int i = chk.length; i >= 0; i--) {
+        				for(int i = chk.length - 1; i >= 0; i--) {
         					if(!chk[i].isSelected()) {
         						userInteract.remove(i);
         					}
@@ -325,6 +327,23 @@ public class App {
         frame.getContentPane().add(BorderLayout.SOUTH, button1);
         frame.setVisible(true);
 		
+	}
+	
+	public static ArrayList<File> getFiles(String dir) {
+		ArrayList<File> retFiles = new ArrayList<File>();
+		File[] flist = new File(dir).listFiles();
+		
+		if(flist != null) {
+	        for (File file : flist) {      
+	            if (file.isFile()) {
+	                retFiles.add(file);
+	            } else if (file.isDirectory()) {
+	                retFiles.addAll(getFiles(file.getAbsolutePath()));
+	            }
+	        }
+	    }
+		
+		return retFiles;
 	}
 }
 

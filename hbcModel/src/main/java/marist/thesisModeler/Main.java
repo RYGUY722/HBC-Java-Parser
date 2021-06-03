@@ -37,12 +37,15 @@ public class Main extends AWTAbstractAnalysis{
         JPanel content = new JPanel();
         content.setLayout(new BoxLayout(content, BoxLayout.Y_AXIS));
         for(JSONObject obj: fbreakdown) {
-        	content.add(generateButton(obj));
+        	JPanel line = generateButton(obj);
+        	line.setAlignmentX(Component.LEFT_ALIGNMENT);
+        	content.add(line);
         }
         content.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         JScrollPane sizeLocker = new JScrollPane(content); // Locks the window size, making it scroll.
         sizeLocker.setPreferredSize(new Dimension(600, 300));
+        sizeLocker.getVerticalScrollBar().setUnitIncrement(16);
         
         frame.add(sizeLocker);
         frame.setVisible(true);
@@ -90,7 +93,7 @@ public class Main extends AWTAbstractAnalysis{
         Color[] colors = new Color[fbreakdown.length];
 
         for (int i = 0; i < fbreakdown.length; i++) {
-          points[i] = new Coord3d(fbreakdown[i].getInt("filenum"), fbreakdown[i].getInt("linecount"), fbreakdown[i].getInt("interaction score"));
+          points[i] = new Coord3d(fbreakdown[i].getInt("filenum"), fbreakdown[i].getInt("interaction score"), fbreakdown[i].getInt("linecount"));
           colors[i] = Color.BLUE;
           if(DEBUG) {
         	  System.out.println("Point added at " + points[i].toString() + ".");
@@ -110,8 +113,8 @@ public class Main extends AWTAbstractAnalysis{
         chart.getScene().add(scatter);
         
         chart.getAxisLayout().setXAxisLabel("File ID");
-        chart.getAxisLayout().setYAxisLabel("Linecount");
-        chart.getAxisLayout().setZAxisLabel("Interaction Score");
+        chart.getAxisLayout().setYAxisLabel("Interaction Score");
+        chart.getAxisLayout().setZAxisLabel("Linecount");
 	}
 	
 	public static JPanel generateButton(JSONObject obj) {
@@ -155,11 +158,14 @@ public class Main extends AWTAbstractAnalysis{
 			
         	@Override
         	public void mouseClicked(MouseEvent event) {
-        		new DetailWindow(obj).setVisible(true);;
+        		DetailWindow det = new DetailWindow(obj);
+        		det.setVisible(true);
+        		
         	}
         });
 		
 		/* RETURN JPANEL */
+		newLine.setAlignmentX(Component.LEFT_ALIGNMENT);
 		return newLine;
 	}
 
