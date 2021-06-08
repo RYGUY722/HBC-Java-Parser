@@ -34,12 +34,14 @@ public class DetailWindow extends JFrame{
         //setSize(400, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
+		
     }
 	
 	public void drawAdvancedView(Graphics g) {
 		JPanel all = new JPanel();
 		//all.setLayout(new BoxLayout(all, BoxLayout.Y_AXIS));
 		all.setLayout(null);
+		all.setPreferredSize(new Dimension(200,100));
 		
 		DetailBox box = new DetailBox(obj);
 		box.setBounds(0, 0, 400, ((obj.getInt("linecount") * 2) + 100));
@@ -99,12 +101,14 @@ public class DetailWindow extends JFrame{
         lower.add(tabs);
         all.add(lower);
         
-        JScrollPane sizeLocker = new JScrollPane(all); // Locks the window size, making it scroll.
+        JScrollPane sizeLocker = new JScrollPane(); // Locks the window size, making it scroll.
+        sizeLocker.setViewportView(all);
         sizeLocker.setMaximumSize(new Dimension(400, 500));
         sizeLocker.getVerticalScrollBar().setUnitIncrement(16);
         
 		add(sizeLocker);
 		created = true;
+		pack();
 	}
 	
 	public void paint(Graphics g) {

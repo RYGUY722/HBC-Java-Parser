@@ -18,6 +18,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Main extends AWTAbstractAnalysis{
 
@@ -70,6 +72,9 @@ public class Main extends AWTAbstractAnalysis{
 		
 		InputStream is = Main.class.getResourceAsStream(fname);
         if (is == null) {
+            Path currentRelativePath = Paths.get("");
+String s = currentRelativePath.toAbsolutePath().toString();
+System.out.println("Current relative path is: " + s);
             throw new NullPointerException("Cannot find resource file " + fname);
         }
         else {
@@ -158,9 +163,9 @@ public class Main extends AWTAbstractAnalysis{
 			
         	@Override
         	public void mouseClicked(MouseEvent event) {
-        		DetailWindow det = new DetailWindow(obj);
-        		det.setVisible(true);
-        		
+        		//DetailWindow det = new DetailWindow(obj);
+        		testFrame det = new testFrame(obj);
+				det.setVisible(true);
         	}
         });
 		
