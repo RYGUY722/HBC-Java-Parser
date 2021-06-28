@@ -1,1 +1,0 @@
-{"interaction score":0,"filenum":1,"filename":"GameEntity","linecount":70,"imports":"[]","method names":"[getName, getMaxHP, getHP, getAttack, getDefense, getMental, getSpeed, getPrecision, calcDamage]","references":"[]","interaction locations":"[]"}

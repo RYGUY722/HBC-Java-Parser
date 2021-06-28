@@ -23,7 +23,7 @@ import java.awt.event.MouseEvent;
 
 public class App {
 	
-	final static public boolean DEBUG = true; // This affects the verbosity when using the console.
+	final static public boolean DEBUG = false; // This affects the verbosity when using the console.
 	public static ArrayList<InteractionObject> userInteract = new ArrayList<InteractionObject>(); // This keeps track of the phrases the program will search for, as well as their weight.
 	
 	public static void main(String[] args) throws IOException {

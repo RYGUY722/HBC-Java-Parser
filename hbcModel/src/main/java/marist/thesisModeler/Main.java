@@ -21,14 +21,14 @@ import java.awt.event.MouseEvent;
 
 public class Main extends AWTAbstractAnalysis{
 
-	final static public boolean DEBUG = true; // This affects the verbosity when using the console.
+	final static public boolean DEBUG = false; // This affects the verbosity when using the console.
 	static JSONObject[] fbreakdown;
 	static SelectableScatter scatter;
 	
 	public static void main(String[] args) throws Exception {
 		System.out.println("Loading...");
 		
-		JFrame frame = new JFrame("HBC Java Parser");
+		JFrame frame = new JFrame("HBC Java Modeler");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600,300);
 		
